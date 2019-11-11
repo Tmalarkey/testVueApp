@@ -1,3 +1,5 @@
 module.exports = {
-    publicPath: '/tmalarkey/'
+    publicPath: process.env.NODE_ENV === 'production'
+        ? '/testVueApp/'
+        : '/'
 }
