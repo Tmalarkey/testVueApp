@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#6f263d" />
+  <meta name="theme-color" content="#85294d" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Temecula Trip" />
@@ -15,12 +15,16 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style-v2.css?v=2" />
 </head>
 <body>
   <main class="app">
     <section id="overview" class="panel active" aria-labelledby="overview-title">
       <div class="hero">
+        <span class="summer-sun" aria-hidden="true">☀️</span>
+        <span class="hero-grapes" aria-hidden="true">🍇</span>
+        <span class="hero-flower flower-one" aria-hidden="true">✿</span>
+        <span class="hero-flower flower-two" aria-hidden="true">✦</span>
         <svg class="vineyard" viewBox="0 0 700 120" role="img" aria-label="Vineyard hills and a wine-country home">
           <path d="M0 88c100-46 193-38 280-4 88 34 184 22 258-13 58-27 106-27 162-6" fill="none" stroke="currentColor" stroke-width="3" opacity=".35"/>
           <path d="M0 104c130-31 236-20 340 10 119 34 250 11 360-30" fill="none" stroke="currentColor" stroke-width="3" opacity=".22"/>
@@ -28,26 +32,52 @@
           <path d="M239 99V62m0 0-12 22m12-22 13 22M438 98V53m0 0-13 25m13-25 15 25" fill="none" stroke="currentColor" stroke-width="3"/>
           <path d="M86 101c20-22 41-34 66-39m-42 45c25-23 52-35 83-39M523 104c22-22 50-36 85-44m-50 49c31-25 61-38 95-43" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/>
         </svg>
-        <div class="eyebrow">🍇 Family trip guide</div>
+        <div class="eyebrow">Family summer getaway</div>
         <h1 id="overview-title">Temecula<br/>Family Itinerary</h1>
+        <div class="summer-script">sunshine, sips & family time</div>
         <p class="hero-sub">August 2–8, 2026 · easy outings, family time, naps and wine-country moments.</p>
-        <div class="hero-meta">
-          <div class="meta-pill"><small>Home base</small><strong>Temecula wine country</strong></div>
-          <div class="meta-pill"><small>Arrival</small><strong>Sunday · 4:00 PM</strong></div>
-        </div>
-        <div class="up-next" id="upNext">
-          <div><span>Up next</span><strong>Arrive at the house</strong></div>
-          <div class="time">Sun · 4:00 PM</div>
-        </div>
+
+        <a class="home-base-card" href="https://www.google.com/maps/dir/?api=1&amp;destination=35298%20Calle%20Campo%2C%20Temecula%2C%20CA" target="_blank" rel="noopener">
+          <span class="home-icon">🏡</span>
+          <span class="home-copy">
+            <small>Home base · tap for Google Maps</small>
+            <strong>35298 Calle Campo</strong>
+            <span>Arrival Sunday · 4:00 PM</span>
+          </span>
+          <span class="home-arrow">↗</span>
+        </a>
+
+        <button class="up-next" id="upNext" type="button">
+          <span class="up-next-icon">🏡</span>
+          <span class="up-next-copy"><small>Up next</small><strong>Arrive at the house</strong></span>
+          <span class="time">SUN · 4:00 PM</span>
+        </button>
       </div>
 
+      <section class="section time-explorer">
+        <div class="section-head playful-head">
+          <div><h2>What’s happening when?</h2><p>Choose a day, then spin through the time.</p></div>
+          <span class="section-sticker" aria-hidden="true">🍹</span>
+        </div>
+        <div class="day-picker" id="explorerDayPicker" aria-label="Choose a day"></div>
+        <div class="time-explorer-card">
+          <div class="time-wheel-wrap">
+            <div class="wheel-selection" aria-hidden="true"></div>
+            <div class="wheel-fade wheel-fade-top" aria-hidden="true"></div>
+            <div class="time-wheel" id="timeWheel" aria-label="Scroll through times"></div>
+            <div class="wheel-fade wheel-fade-bottom" aria-hidden="true"></div>
+          </div>
+          <div class="time-result" id="timeResult" aria-live="polite"></div>
+        </div>
+      </section>
+
       <section class="section">
-        <div class="section-head"><div><h2>Choose a day</h2><p>Tap for the full timeline</p></div></div>
+        <div class="section-head"><div><h2>Choose a day</h2><p>Tap for the full timeline</p></div><span class="section-sticker" aria-hidden="true">🌸</span></div>
         <div class="day-grid" id="dayGrid"></div>
       </section>
 
       <section class="section">
-        <div class="section-head"><div><h2>Quick access</h2><p>Useful during the trip</p></div></div>
+        <div class="section-head"><div><h2>Quick access</h2><p>Useful during the trip</p></div><span class="section-sticker" aria-hidden="true">🕶️</span></div>
         <div class="quick-grid">
           <button class="quick-link" type="button" data-panel-target="nearby"><span>📍</span><span><strong>Nearby options</strong><small>Backup outings and parks</small></span></button>
           <button class="quick-link" type="button" data-panel-target="info"><span>✅</span><span><strong>Confirmed plans</strong><small>Reservations and driver</small></span></button>
@@ -76,18 +106,19 @@
 
     <section id="info" class="panel" aria-labelledby="info-title">
       <div class="day-header">
-        <div><h2 id="info-title">Trip Info</h2><p>Reservations, helpful notes and iPhone tips.</p></div>
+        <div><h2 id="info-title">Trip Info</h2><p>Reservations, address and iPhone tips.</p></div>
         <button class="back-button" type="button" data-panel-target="overview">Overview</button>
+      </div>
+
+      <div class="info-card address-info-card">
+        <h3>Home base</h3>
+        <p><strong>35298 Calle Campo</strong><br/>Tap below for turn-by-turn directions in Google Maps.</p>
+        <a class="action-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=35298%20Calle%20Campo%2C%20Temecula%2C%20CA" target="_blank" rel="noopener">Open in Google Maps</a>
       </div>
 
       <div class="info-card">
         <h3>Confirmed highlights</h3>
         <div class="status-list" id="statusList"></div>
-      </div>
-
-      <div class="info-card">
-        <h3>Home-base address</h3>
-        <p>For privacy, the exact house address is intentionally not published on this public family link. Keep the address pinned in the iMessage conversation.</p>
       </div>
 
       <div class="info-card">
@@ -104,6 +135,6 @@
     <button class="nav-button" type="button" data-panel-target="info"><span class="nav-icon">ⓘ</span>Info</button>
   </nav>
 
-  <script src="app.js" defer></script>
+  <script src="app-v2.js?v=2" defer></script>
 </body>
 </html>
