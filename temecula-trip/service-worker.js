@@ -1,9 +1,11 @@
-const CACHE_NAME = 'temecula-trip-v2';
+const CACHE_NAME = 'temecula-trip-v3';
 const ASSETS = [
   './',
   './index.html',
   './style-v2.css',
-  './app-v2.js',
+  './style-v3.css',
+  './data-v3.js',
+  './features-v3.js',
   './manifest.webmanifest',
   './icon.svg'
 ];
@@ -24,6 +26,9 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin) return;
+
   event.respondWith(
     fetch(event.request)
       .then(response => {
