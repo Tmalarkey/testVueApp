@@ -1,0 +1,7 @@
+@import url('./style-v4.css?v=4');
+
+.organizer-hidden { display: none !important; }
+.organizer-card { margin-top: 15px; padding: 17px; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, #fffdf8, #fff0e7); }
+.organizer-card h3 { margin-bottom: 6px; color: var(--wine-dark); font: 700 1.08rem 'Fraunces', Georgia, serif; }
+.organizer-card p { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.organizer-un
