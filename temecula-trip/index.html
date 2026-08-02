@@ -15,7 +15,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style-v2.css?v=2" />
+  <link rel="stylesheet" href="style-v3.css?v=3" />
 </head>
 <body>
   <main class="app">
@@ -54,6 +54,26 @@
         </button>
       </div>
 
+      <section class="landing-tools" aria-label="Live trip tools">
+        <article class="weather-card" id="weatherCard" aria-live="polite">
+          <div class="weather-loading"><span>🌤️</span><div><strong>Loading Temecula weather</strong><p>Checking the current conditions…</p></div></div>
+        </article>
+
+        <article class="wine-counter-card" aria-labelledby="wine-counter-title">
+          <span class="wine-counter-art" aria-hidden="true">🍾</span>
+          <div class="wine-counter-copy">
+            <small>Family trip scoreboard</small>
+            <h2 id="wine-counter-title">Bottles enjoyed</h2>
+            <p>The same running total for everyone opening the family link.</p>
+          </div>
+          <div class="wine-counter-controls" aria-label="Wine bottle counter">
+            <button type="button" data-wine-action="down" aria-label="Remove one bottle">−</button>
+            <strong id="wineCount" aria-live="polite">0</strong>
+            <button type="button" data-wine-action="up" aria-label="Add one bottle">+</button>
+          </div>
+        </article>
+      </section>
+
       <section class="section time-explorer">
         <div class="section-head playful-head">
           <div><h2>What’s happening when?</h2><p>Choose a day, then spin through the time.</p></div>
@@ -72,22 +92,22 @@
       </section>
 
       <section class="section">
-        <div class="section-head"><div><h2>Choose a day</h2><p>Tap for the full timeline</p></div><span class="section-sticker" aria-hidden="true">🌸</span></div>
+        <div class="section-head"><div><h2>Choose a day</h2><p>Tap for the full timeline and destination photos.</p></div><span class="section-sticker" aria-hidden="true">🌸</span></div>
         <div class="day-grid" id="dayGrid"></div>
       </section>
 
       <section class="section">
         <div class="section-head"><div><h2>Quick access</h2><p>Useful during the trip</p></div><span class="section-sticker" aria-hidden="true">🕶️</span></div>
         <div class="quick-grid">
-          <button class="quick-link" type="button" data-panel-target="nearby"><span>📍</span><span><strong>Nearby options</strong><small>Backup outings and parks</small></span></button>
-          <button class="quick-link" type="button" data-panel-target="info"><span>✅</span><span><strong>Confirmed plans</strong><small>Reservations and driver</small></span></button>
+          <button class="quick-link" type="button" data-panel-target="nearby"><span>📍</span><span><strong>Nearby options</strong><small>Backup outings with photos</small></span></button>
+          <button class="quick-link" type="button" data-panel-target="edit"><span>✏️</span><span><strong>Add a plan</strong><small>Customize and share updates</small></span></button>
         </div>
       </section>
     </section>
 
     <section id="days" class="panel" aria-labelledby="days-title">
       <div class="day-header">
-        <div><h2 id="days-title">Daily Details</h2><p>Select a day below.</p></div>
+        <div><h2 id="days-title">Daily Details</h2><p>Select a day for its full timeline.</p></div>
         <button class="back-button" type="button" data-panel-target="overview">Overview</button>
       </div>
       <div class="day-grid" id="daysGrid"></div>
@@ -97,11 +117,52 @@
 
     <section id="nearby" class="panel" aria-labelledby="nearby-title">
       <div class="day-header">
-        <div><h2 id="nearby-title">Nearby Options</h2><p>Flexible ideas and quick-reference stops.</p></div>
+        <div><h2 id="nearby-title">Nearby Options</h2><p>Flexible ideas, destination photos and Google Maps.</p></div>
         <button class="back-button" type="button" data-panel-target="overview">Overview</button>
       </div>
       <div class="nearby-list" id="nearbyList"></div>
       <p class="footer-note">Opening times and drive estimates came from the original itinerary and may change.</p>
+    </section>
+
+    <section id="edit" class="panel" aria-labelledby="edit-title">
+      <div class="day-header">
+        <div><h2 id="edit-title">Edit Itinerary</h2><p>Add custom plans without disturbing the original schedule.</p></div>
+        <button class="back-button" type="button" data-panel-target="overview">Overview</button>
+      </div>
+
+      <div class="edit-note">
+        <span aria-hidden="true">✨</span>
+        <div><strong>How edits work</strong><p>Additions save on this iPhone. Use “Share customized link” to send the additions to the family group; opening that link imports them onto their device.</p></div>
+      </div>
+
+      <form id="customPlanForm" class="edit-form">
+        <label>Day
+          <select id="editDay" name="day" required></select>
+        </label>
+        <label>Time
+          <span class="time-input-shell"><input name="time" type="time" required /></span>
+        </label>
+        <label>Activity
+          <input name="title" type="text" maxlength="80" placeholder="Pool time, grocery run…" required />
+        </label>
+        <label>Location <span class="optional">optional</span>
+          <input name="location" type="text" maxlength="100" placeholder="At the house or destination" />
+        </label>
+        <label>Notes <span class="optional">optional</span>
+          <textarea name="note" rows="3" maxlength="240" placeholder="Anything the family should know"></textarea>
+        </label>
+        <button class="primary-form-button" type="submit">Add to itinerary</button>
+      </form>
+
+      <div class="editor-actions">
+        <button id="shareCustomPlans" type="button">Share customized link</button>
+        <button id="resetCustomPlans" class="destructive" type="button">Clear custom additions</button>
+      </div>
+
+      <section class="custom-plans-section">
+        <div class="section-head"><div><h2>Your additions</h2><p>These appear inside the day timeline and time wheel.</p></div></div>
+        <div id="customPlanList"></div>
+      </section>
     </section>
 
     <section id="info" class="panel" aria-labelledby="info-title">
@@ -132,9 +193,12 @@
     <button class="nav-button active" type="button" data-panel-target="overview"><span class="nav-icon">⌂</span>Overview</button>
     <button class="nav-button" type="button" data-panel-target="days"><span class="nav-icon">▦</span>Days</button>
     <button class="nav-button" type="button" data-panel-target="nearby"><span class="nav-icon">⌖</span>Nearby</button>
+    <button class="nav-button" type="button" data-panel-target="edit"><span class="nav-icon">✎</span>Edit</button>
     <button class="nav-button" type="button" data-panel-target="info"><span class="nav-icon">ⓘ</span>Info</button>
   </nav>
 
-  <script src="app-v2.js?v=2" defer></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="data-v3.js?v=3" defer></script>
+  <script src="features-v3.js?v=3" defer></script>
 </body>
 </html>
