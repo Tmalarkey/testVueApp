@@ -20,6 +20,12 @@ function dateParts(isoDate) {
   };
 }
 
+function dateTimeFromMinutes(isoDate, minutes) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${isoDate}T${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`;
+}
+
 function buildSlots(events) {
   const slots = [];
   const dayStart = 480;
@@ -70,7 +76,9 @@ function rowsToTripDays(rows) {
     if (!grouped.has(row.trip_day_id)) {
       const parts = dateParts(row.day_date);
       grouped.set(row.trip_day_id, {
-        id: row.trip_day_id,
+        id: parts.shortDay.toLowerCase(),
+        databaseId: row.trip_day_id,
+        dayDate: row.day_date,
         weekday: parts.weekday,
         shortDay: parts.shortDay,
         date: parts.date,
@@ -86,10 +94,11 @@ function rowsToTripDays(rows) {
 
     if (!row.activity_id) continue;
     const day = grouped.get(row.trip_day_id);
+    const startMinutes = Number(row.start_minutes);
     const event = {
       id: row.activity_id,
       time: row.display_time,
-      start: Number(row.start_minutes),
+      start: startMinutes,
       end: Number(row.end_minutes),
       title: row.activity_title,
       location: row.location,
@@ -101,35 +110,43 @@ function rowsToTripDays(rows) {
       image: row.photo_url,
       imageAlt: row.photo_alt,
       photoSource: row.photo_source,
-      photoSourceUrl: row.photo_source_url
+      photoSourceUrl: row.photo_source_url,
+      dateTime: dateTimeFromMinutes(row.day_date, startMinutes)
     };
     day.events.push(event);
     if (!day.status && row.status_label) day.status = row.status_label;
   }
 
-  return [...grouped.values()]
-    .map(day => {
-      day.events.sort((a, b) => a.start - b.start);
-      day.slots = buildSlots(day.events);
-      return day;
-    });
+  return [...grouped.values()].map(day => {
+    day.events.sort((a, b) => a.start - b.start);
+    day.slots = buildSlots(day.events);
+    return day;
+  });
+}
+
+function safeRefresh(name, callback) {
+  try {
+    if (typeof callback === 'function') callback();
+  } catch (error) {
+    console.warn(`Live itinerary refresh step failed: ${name}`, error);
+  }
 }
 
 function refreshAfterLiveLoad() {
-  if (typeof customPlans !== 'undefined') {
-    const cards = tripDays.map(dayCard).join('');
-    const dayGrid = document.getElementById('dayGrid');
-    const daysGrid = document.getElementById('daysGrid');
-    if (dayGrid) dayGrid.innerHTML = cards;
-    if (daysGrid) daysGrid.innerHTML = cards;
+  const cards = tripDays.map(dayCard).join('');
+  const dayGrid = document.getElementById('dayGrid');
+  const daysGrid = document.getElementById('daysGrid');
+  if (dayGrid) dayGrid.innerHTML = cards;
+  if (daysGrid) daysGrid.innerHTML = cards;
 
-    if (typeof renderUpNext === 'function') renderUpNext();
-    if (typeof renderExplorerDays === 'function') renderExplorerDays();
-    if (typeof renderTimeWheel === 'function') renderTimeWheel();
-    if (typeof renderEditor === 'function') renderEditor();
-    if (typeof bindDynamicControls === 'function') bindDynamicControls();
-    if (typeof showToast === 'function') showToast('Live itinerary loaded.');
-  }
+  /* Bind navigation immediately so secondary widget failures cannot disable day taps. */
+  safeRefresh('bind controls', () => bindDynamicControls());
+  safeRefresh('up next', () => renderUpNext());
+  safeRefresh('explorer days', () => renderExplorerDays());
+  safeRefresh('time wheel', () => renderTimeWheel());
+  safeRefresh('editor', () => renderEditor());
+  safeRefresh('image fallbacks', () => bindImageFallbacks());
+  safeRefresh('toast', () => showToast('Live itinerary loaded.'));
 }
 
 async function loadLiveItinerary() {
@@ -157,6 +174,7 @@ async function loadLiveItinerary() {
     console.warn('Using embedded itinerary fallback:', error);
     tripDays.splice(0, tripDays.length, ...embeddedTripDays);
     window.ITINERARY_SOURCE = 'embedded-fallback';
+    safeRefresh('fallback controls', () => bindDynamicControls());
     return false;
   }
 }
