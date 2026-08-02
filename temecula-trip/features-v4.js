@@ -1,4 +1,4 @@
-/* Version 4 overrides: compact hero weather and no wine counter. */
+/* Version 5 overrides: compact hero weather, no wine counter, live itinerary. */
 
 async function loadWeather() {
   const card = document.getElementById('weatherCard');
@@ -38,3 +38,14 @@ async function loadWeather() {
 /* The shared bottle counter is intentionally disabled for now. */
 async function loadWineCount() {}
 async function changeWineCount() {}
+
+/* Load the live Supabase-backed itinerary after the existing app code is available. */
+(function activateLiveItinerary() {
+  if (document.querySelector('script[data-live-itinerary]')) return;
+  const script = document.createElement('script');
+  script.src = './live-itinerary-v5.js?v=5';
+  script.defer = true;
+  script.dataset.liveItinerary = 'true';
+  script.onerror = () => console.warn('Live itinerary loader unavailable; embedded schedule remains active.');
+  document.head.appendChild(script);
+})();
