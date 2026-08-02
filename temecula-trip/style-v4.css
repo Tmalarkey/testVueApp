@@ -1,0 +1,89 @@
+@import url('./style-v3.css?v=3');
+
+/* Compact hero weather replaces the decorative sun. */
+.hero-weather {
+  position: absolute;
+  z-index: 4;
+  top: max(18px, env(safe-area-inset-top));
+  right: 18px;
+  width: auto;
+  min-width: 92px;
+  max-width: 112px;
+  min-height: 56px;
+  padding: 8px 9px;
+  border: 1px solid rgba(133, 41, 77, .10);
+  border-radius: 18px;
+  background: rgba(255, 253, 249, .83);
+  box-shadow: 0 7px 20px rgba(93, 23, 53, .10);
+  backdrop-filter: blur(12px);
+}
+
+.hero-weather .weather-main {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+}
+
+.hero-weather .weather-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: var(--sun-soft);
+  box-shadow: none;
+  font-size: 1.25rem;
+}
+
+.hero-weather .weather-main small { display: none; }
+.hero-weather .weather-main strong {
+  margin: 0;
+  color: var(--wine-dark);
+  font: 700 1.25rem/1 'Fraunces', Georgia, serif;
+}
+.hero-weather .weather-main span {
+  max-width: 62px;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: .58rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-weather .weather-stats,
+.hero-weather .weather-foot { display: none; }
+
+.hero-weather .weather-loading,
+.hero-weather .weather-error {
+  min-height: 40px;
+  gap: 7px;
+}
+.hero-weather .weather-loading > span,
+.hero-weather .weather-error > span { font-size: 1.3rem; }
+.hero-weather .weather-loading strong,
+.hero-weather .weather-error strong {
+  color: var(--wine-dark);
+  font-size: .63rem;
+  line-height: 1.15;
+}
+.hero-weather .weather-loading p,
+.hero-weather .weather-error p,
+.hero-weather .weather-error button { display: none; }
+
+/* The large weather/counter row has been removed from the landing page. */
+.landing-tools,
+.wine-counter-card,
+.summer-sun { display: none !important; }
+
+@media (max-width: 390px) {
+  .hero-weather {
+    top: max(16px, env(safe-area-inset-top));
+    right: 13px;
+    min-width: 84px;
+    padding: 7px 8px;
+  }
+  .hero-weather .weather-main { grid-template-columns: 30px minmax(0, 1fr); gap: 6px; }
+  .hero-weather .weather-icon { width: 30px; height: 30px; font-size: 1.1rem; }
+  .hero-weather .weather-main strong { font-size: 1.12rem; }
+}
