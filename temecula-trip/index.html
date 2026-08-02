@@ -15,13 +15,15 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style-v3.css?v=3" />
+  <link rel="stylesheet" href="style-v4.css?v=4" />
 </head>
 <body>
   <main class="app">
     <section id="overview" class="panel active" aria-labelledby="overview-title">
       <div class="hero">
-        <span class="summer-sun" aria-hidden="true">☀️</span>
+        <article class="hero-weather" id="weatherCard" aria-live="polite" aria-label="Loading current Temecula weather">
+          <div class="weather-loading"><span aria-hidden="true">🌤️</span><div><strong>Loading weather</strong></div></div>
+        </article>
         <span class="hero-grapes" aria-hidden="true">🍇</span>
         <span class="hero-flower flower-one" aria-hidden="true">✿</span>
         <span class="hero-flower flower-two" aria-hidden="true">✦</span>
@@ -53,26 +55,6 @@
           <span class="time">SUN · 4:00 PM</span>
         </button>
       </div>
-
-      <section class="landing-tools" aria-label="Live trip tools">
-        <article class="weather-card" id="weatherCard" aria-live="polite">
-          <div class="weather-loading"><span>🌤️</span><div><strong>Loading Temecula weather</strong><p>Checking the current conditions…</p></div></div>
-        </article>
-
-        <article class="wine-counter-card" aria-labelledby="wine-counter-title">
-          <span class="wine-counter-art" aria-hidden="true">🍾</span>
-          <div class="wine-counter-copy">
-            <small>Family trip scoreboard</small>
-            <h2 id="wine-counter-title">Bottles enjoyed</h2>
-            <p>The same running total for everyone opening the family link.</p>
-          </div>
-          <div class="wine-counter-controls" aria-label="Wine bottle counter">
-            <button type="button" data-wine-action="down" aria-label="Remove one bottle">−</button>
-            <strong id="wineCount" aria-live="polite">0</strong>
-            <button type="button" data-wine-action="up" aria-label="Add one bottle">+</button>
-          </div>
-        </article>
-      </section>
 
       <section class="section time-explorer">
         <div class="section-head playful-head">
@@ -200,5 +182,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="data-v3.js?v=3" defer></script>
   <script src="features-v3.js?v=3" defer></script>
+  <script src="features-v4.js?v=4" defer></script>
 </body>
 </html>
